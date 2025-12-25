@@ -124,6 +124,23 @@ See [SYSTEM_TEMPLATE.md](./SYSTEM_TEMPLATE.md) for:
 
 ---
 
+## 📝 Knowledge Workflow
+
+This repository works alongside a **Notion playbook** for capturing lessons in real-time.
+
+| Location | Purpose |
+|----------|---------|
+| **Notion** | Working notes - capture lessons AS they happen during debugging |
+| **This Repo** | Published playbook - polished, organized, version-controlled reference |
+
+**The workflow:**
+1. Hit a problem? Jot it in Notion immediately (low friction)
+2. Solve it? Add the solution to Notion
+3. Periodically transfer polished lessons here to `docs/`
+4. This repo becomes the "official" reference; Notion stays your scratch pad
+
+---
+
 ## 🤝 Contributing
 
 This template evolves with each new bot built. Contributions welcome!
