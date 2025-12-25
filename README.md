@@ -2,8 +2,8 @@
 
 Reusable template for AI chatbot systems using n8n, Airtable, Claude, and Perplexity.
 
-**Based on:** Rainmaker (Pipeline Pro) System  
-**Adaptable for:** LibreChat, Open WebUI, and other chat interfaces
+**Based on:** Rainmaker (Pipeline Pro) System
+**Built for:** LibreChat
 
 ---
 
@@ -23,7 +23,7 @@ A complete architecture for building AI-powered bots that:
 
 | Component | Purpose |
 |-----------|--------|
-| **Chat Interface** | LibreChat, Open WebUI, or similar |
+| **Chat Interface** | LibreChat |
 | **Workflow Engine** | n8n (self-hosted or cloud) |
 | **Database** | Airtable |
 | **AI Models** | Claude (Anthropic) |
@@ -72,9 +72,10 @@ cd my-new-bot
 - Update Airtable base/table IDs
 - Configure credentials
 
-### 4. Configure Chat Interface
-- Set up LibreChat or Open WebUI
-- Point tools/actions to n8n webhooks
+### 4. Configure LibreChat
+- Set up your LibreChat instance
+- Create Actions (OpenAPI specs) pointing to n8n webhooks
+- Configure your Agent with system prompt
 - Test the flow!
 
 ---
@@ -97,7 +98,7 @@ cd my-new-bot
 - [ ] Clone this template
 - [ ] Create Airtable base with required fields
 - [ ] Import and configure n8n workflows
-- [ ] Set up chat interface
+- [ ] Set up LibreChat Agent with Actions
 - [ ] Configure credentials (Airtable, Claude, Perplexity, Gmail)
 - [ ] Test end-to-end flow
 - [ ] Customize for your use case
@@ -110,14 +111,14 @@ See [SYSTEM_TEMPLATE.md](./SYSTEM_TEMPLATE.md) for:
 - Complete workflow inventory
 - All Airtable field definitions
 - Integration patterns with code examples
-- LibreChat adaptation guide
+- LibreChat setup guide
 - Reusable code snippets
 
 ### Lessons Learned (The Jefferies Tube Playbook)
 
 | Doc | What You'll Learn |
 |-----|-------------------|
-| [LibreChat Setup](./docs/librechat-setup.md) | Architecture, migration checklist, Actions vs Pipe Functions |
+| [LibreChat Setup](./docs/librechat-setup.md) | Architecture, Actions, Agent configuration |
 | [CSS Theming](./docs/css-theming.md) | The v1-v10 journey, critical rules, copy-paste CSS template |
 | [Testing Protocols](./docs/testing-protocols.md) | Data verification protocol - *conversation pass ≠ integration pass*
 

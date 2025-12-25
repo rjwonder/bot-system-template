@@ -1,6 +1,6 @@
-# LibreChat Setup & Migration Guide
+# LibreChat Setup Guide
 
-*Lessons learned from migrating bots from Open WebUI to LibreChat*
+*How to configure LibreChat bots with n8n backends*
 
 ---
 
@@ -13,7 +13,7 @@ LibreChat Agent + Action → Claude API → n8n Webhook (Async) → Airtable (Lo
 ### Key Philosophy
 - **User gets instant streaming responses** - Claude responds directly
 - **Logging happens asynchronously** - n8n handles data persistence in the background
-- **Actions use OpenAPI specs** - No embedded Python code like Open WebUI pipes
+- **Actions use OpenAPI specs** - Clean API definitions for external calls
 
 ### Component Breakdown
 
@@ -26,33 +26,33 @@ LibreChat Agent + Action → Claude API → n8n Webhook (Async) → Airtable (Lo
 
 ---
 
-## Bot Migration Checklist (Open WebUI → LibreChat)
+## New Bot Setup Checklist
 
-### From Old System (Open WebUI)
+### 1. LibreChat Instance
+- [ ] LibreChat running (Railway, Docker, etc.)
+- [ ] SSL/HTTPS configured
+- [ ] Anthropic API key set
 
-- [ ] Export system prompt from pipe function's `get_system_prompt()`
-- [ ] Document webhook URL and payload structure
-- [ ] Note any special state management logic
-- [ ] Export any knowledge base content
-- [ ] Document conversation flow stages
+### 2. Create Your Agent
+- [ ] Create new Agent in LibreChat UI
+- [ ] Set system prompt with data collection flow
+- [ ] Add Action calling instructions to prompt
+- [ ] Configure Claude model
 
-### For LibreChat
+### 3. Create Actions (OpenAPI Specs)
+- [ ] Write OpenAPI spec for each n8n webhook
+- [ ] Test each Action individually
+- [ ] Attach Actions to your Agent
 
-- [ ] Create OpenAPI spec for any webhook Actions
-- [ ] Adapt system prompt (add Action calling instructions)
-- [ ] Create Agent in LibreChat UI
-- [ ] Configure model settings (Claude recommended)
-- [ ] Test end-to-end flow
-- [ ] Verify n8n receives correct payload
+### 4. Backend Setup
+- [ ] n8n workflows imported and configured
+- [ ] Airtable base created with required fields
+- [ ] Credentials configured (Airtable, Gmail, etc.)
 
-### Key Differences
-
-| Open WebUI | LibreChat |
-|------------|-----------|
-| Pipe Functions (Python) | Actions (OpenAPI specs) |
-| `get_system_prompt()` | Agent system prompt field |
-| Model dropdown | Agent model configuration |
-| Valves for config | Environment variables |
+### 5. Testing
+- [ ] End-to-end flow works
+- [ ] Data appears correctly in Airtable
+- [ ] Emails send properly
 
 ---
 
@@ -79,7 +79,7 @@ paths:
             schema:
               type: object
               properties:
-                session_id:
+                email:
                   type: string
                 collected_data:
                   type: object
@@ -94,7 +94,7 @@ Add explicit instructions for when to call actions:
 
 ```
 When you have collected all required information, call the submitData action with:
-- session_id: The current conversation ID
+- email: The user's email address
 - collected_data: Object containing all collected fields
 ```
 
@@ -118,19 +118,19 @@ APP_TITLE=Your Bot Name
 
 ---
 
-## Common Migration Pitfalls
+## Common Setup Issues
 
 ### 1. State Management
-- **Open WebUI**: Session state in pipe valves
-- **LibreChat**: Stateless - use conversation context or external storage
+LibreChat is stateless - use conversation context or external storage (Airtable) for persisting data between sessions.
 
 ### 2. Webhook Payloads
-- Ensure n8n workflows expect the new payload format from Actions
+- Ensure n8n workflows expect the payload format from your Actions
 - Test with actual LibreChat requests, not assumptions
+- Use the testing-protocols.md to verify data actually saves correctly
 
 ### 3. System Prompt Length
-- LibreChat may have different token limits
 - Test with full production prompts before deployment
+- Claude can handle long prompts, but keep them focused
 
 ---
 
@@ -139,7 +139,7 @@ APP_TITLE=Your Bot Name
 - [ ] LibreChat instance running (Railway, Docker, etc.)
 - [ ] Agent created and configured
 - [ ] Actions tested with n8n webhooks
-- [ ] Custom CSS applied (if branding required)
+- [ ] Custom CSS applied (if branding required - see css-theming.md)
 - [ ] SSL/HTTPS configured
 - [ ] Environment variables set
 - [ ] Backup of configuration exported

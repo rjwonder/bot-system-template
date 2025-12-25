@@ -9,7 +9,7 @@
 ## 🎯 System Overview
 
 The Rainmaker system is a client onboarding and intelligence generation platform that:
-1. Collects client information via chat interface (Open WebUI → LibreChat for new bots)
+1. Collects client information via LibreChat
 2. Stores and manages data in Airtable
 3. Performs AI-powered analysis (website scraping, market research)
 4. Generates reports and marketing campaigns
@@ -19,15 +19,15 @@ The Rainmaker system is a client onboarding and intelligence generation platform
 
 ## 🔧 Technology Stack
 
-| Component | Rainmaker Uses | LibreChat Adaptation |
-|-----------|----------------|---------------------|
-| Chat Interface | Open WebUI | **LibreChat** |
-| Workflow Engine | n8n | n8n (same) |
-| Database | Airtable | Airtable (same) |
-| AI Models | Claude (Anthropic) | Claude (same) |
-| Real-time Research | Perplexity API | Perplexity (same) |
-| Email | Gmail (n8n node) | Gmail (same) |
-| Web Scraping | HTTP Request + Jina | Same pattern |
+| Component | Purpose |
+|-----------|---------|
+| Chat Interface | LibreChat |
+| Workflow Engine | n8n (self-hosted or cloud) |
+| Database | Airtable |
+| AI Models | Claude (Anthropic) |
+| Real-time Research | Perplexity API |
+| Email | Gmail (via n8n) |
+| Web Scraping | HTTP Request + Jina |
 
 ---
 
@@ -399,7 +399,7 @@ Chat sends HTTP POST to n8n webhook with:
   ...
 }
 ```
-**LibreChat adaptation:** Configure LibreChat actions/tools to call n8n webhooks
+**LibreChat:** Configure Actions (OpenAPI specs) to call n8n webhooks
 
 ### Pattern 2: Airtable Lookup by Email
 ```javascript
@@ -483,28 +483,57 @@ return { html };
 
 ---
 
-## 🔄 LibreChat Adaptation Guide
+## 🔄 LibreChat Setup Guide
 
-### Key Differences from Open WebUI
+### Architecture
+```
+LibreChat Agent + Action → Claude API → n8n Webhook (Async) → Airtable (Logging)
+```
 
-| Aspect | Open WebUI | LibreChat |
-|--------|------------|-----------|
-| Tool calling | Functions | Actions/Plugins |
-| Webhook config | Model settings | Agent config |
-| Memory | Built-in | Separate config |
-| UI customization | Limited | Theme-based |
+### Key Concepts
 
-### What Stays the Same
-- All n8n workflows (just update webhook source expectations if needed)
-- Airtable structure (100% reusable)
-- AI prompts and logic
-- Report generation code
-- Email templates
+| Concept | Description |
+|---------|-------------|
+| Agent | Your bot configuration (system prompt, model, actions) |
+| Action | OpenAPI spec that calls external APIs (n8n webhooks) |
+| Model | Claude (recommended) via Anthropic API |
 
-### What Needs Adaptation
-1. **Webhook triggers** - May need to adjust expected payload format
-2. **User identification** - How email/user ID is passed from chat
-3. **Response formatting** - How results display in chat
+### Creating an Action
+
+Actions use OpenAPI specifications to call your n8n webhooks:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Bot Action API
+  version: 1.0.0
+servers:
+  - url: https://your-n8n-instance.com
+paths:
+  /webhook/your-endpoint:
+    post:
+      operationId: submitData
+      summary: Submit collected data to backend
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                collected_data:
+                  type: object
+```
+
+### Agent Configuration
+
+1. Create Agent in LibreChat UI
+2. Set system prompt with Action calling instructions
+3. Attach your Actions
+4. Configure Claude model
+5. Test end-to-end
 
 ---
 
@@ -522,9 +551,10 @@ return { html };
 - [ ] Configure credentials (Airtable, Claude, Perplexity, Gmail)
 
 ### 3. LibreChat Configuration
-- [ ] Create new agent/assistant
-- [ ] Configure tools/actions to call n8n webhooks
-- [ ] Set up system prompts for data collection
+- [ ] Create new Agent in LibreChat UI
+- [ ] Write system prompt with Action calling instructions
+- [ ] Create OpenAPI specs for each n8n webhook
+- [ ] Attach Actions to Agent
 - [ ] Test end-to-end flow
 
 ### 4. Testing Flow
