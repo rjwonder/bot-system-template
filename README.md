@@ -47,7 +47,9 @@ bot-system-template/
 │   ├── html-report.js       # HTML generation
 │   └── validation.js        # Input validation
 └── docs/                     # Additional documentation
-    └── librechat-setup.md   # LibreChat configuration
+    ├── librechat-setup.md   # LibreChat architecture & migration
+    ├── css-theming.md       # CSS theming (the v1-v10 journey)
+    └── testing-protocols.md # Data verification protocols
 ```
 
 ---
@@ -110,6 +112,14 @@ See [SYSTEM_TEMPLATE.md](./SYSTEM_TEMPLATE.md) for:
 - Integration patterns with code examples
 - LibreChat adaptation guide
 - Reusable code snippets
+
+### Lessons Learned (The Jefferies Tube Playbook)
+
+| Doc | What You'll Learn |
+|-----|-------------------|
+| [LibreChat Setup](./docs/librechat-setup.md) | Architecture, migration checklist, Actions vs Pipe Functions |
+| [CSS Theming](./docs/css-theming.md) | The v1-v10 journey, critical rules, copy-paste CSS template |
+| [Testing Protocols](./docs/testing-protocols.md) | Data verification protocol - *conversation pass ≠ integration pass*
 
 ---
 
